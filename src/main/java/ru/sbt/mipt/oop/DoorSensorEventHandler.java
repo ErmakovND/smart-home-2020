@@ -1,5 +1,7 @@
 package ru.sbt.mipt.oop;
 
+import javafx.util.Pair;
+
 public class DoorSensorEventHandler implements SensorEventHandler {
     private final SmartHome smartHome;
 
@@ -18,10 +20,6 @@ public class DoorSensorEventHandler implements SensorEventHandler {
         boolean setDoorOpen = event.getType() == SensorEventType.DOOR_OPEN;
         door.setOpen(setDoorOpen);
         logEvent(room, door, setDoorOpen ? "opened" : "closed");
-
-        if ("hall".equals(room.getName())) {
-            new LightSensorController(smartHome).turnOffAllLights();
-        }
     }
 
     private void logEvent(Room room, Door door, String setDoor) {
@@ -33,24 +31,21 @@ public class DoorSensorEventHandler implements SensorEventHandler {
     }
 
     private Room findRoom(SensorEvent event) {
-        for (Room room : smartHome.getRooms()) {
-            for (Door door : room.getDoors()) {
-                if (door.getId().equals(event.getObjectId())) {
-                    return room;
-                }
-            }
-        }
-        return null;
+        return findRoomAndDoor(event).getKey();
     }
 
     private Door findDoor(SensorEvent event) {
+        return findRoomAndDoor(event).getValue();
+    }
+
+    private Pair<Room, Door> findRoomAndDoor(SensorEvent event) {
         for (Room room : smartHome.getRooms()) {
             for (Door door : room.getDoors()) {
                 if (door.getId().equals(event.getObjectId())) {
-                    return door;
+                    return new Pair<>(room, door);
                 }
             }
         }
-        return null;
+        return new Pair<>(null, null);
     }
 }

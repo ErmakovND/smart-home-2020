@@ -1,5 +1,7 @@
 package ru.sbt.mipt.oop;
 
+import javafx.util.Pair;
+
 public class LightSensorEventHandler implements SensorEventHandler {
     private final SmartHome smartHome;
 
@@ -29,24 +31,21 @@ public class LightSensorEventHandler implements SensorEventHandler {
     }
 
     private Room findRoom(SensorEvent event) {
-        for (Room room : smartHome.getRooms()) {
-            for (Light light : room.getLights()) {
-                if (light.getId().equals(event.getObjectId())) {
-                    return room;
-                }
-            }
-        }
-        return null;
+        return findRoomAndLight(event).getKey();
     }
 
     private Light findLight(SensorEvent event) {
+        return findRoomAndLight(event).getValue();
+    }
+
+    private Pair<Room, Light> findRoomAndLight(SensorEvent event) {
         for (Room room : smartHome.getRooms()) {
             for (Light light : room.getLights()) {
                 if (light.getId().equals(event.getObjectId())) {
-                    return light;
+                    return new Pair<>(room, light);
                 }
             }
         }
-        return null;
+        return new Pair<>(null, null);
     }
 }
