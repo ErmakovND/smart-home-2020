@@ -11,19 +11,20 @@ public class LightSensorEventHandler implements SensorEventHandler {
     public void handle(SensorEvent event) {
         if (!isLightEvent(event)) return;
 
-        for (Room room : smartHome.getRooms()) {
-            for (Light light : room.getLights()) {
-                if (light.getId().equals(event.getObjectId())) {
-                    boolean setLightOn = event.getType() == SensorEventType.LIGHT_ON;
-                    light.setOn(setLightOn);
-                    logEvent(room, light, setLightOn ? "on" : "off");
-                }
-            }
-        }
+        smartHome.execute(o -> {
+            if (!(o instanceof Light)) return;
+
+            Light light = (Light) o;
+            if (!light.getId().equals(event.getObjectId())) return;
+
+            boolean setLightOn = event.getType() == SensorEventType.LIGHT_ON;
+            light.setOn(setLightOn);
+            logEvent(light, setLightOn ? "on" : "off");
+        });
     }
 
-    private void logEvent(Room room, Light light, String setLight) {
-        System.out.println("Light " + light.getId() + " in room " + room.getName() + " was turned " + setLight + ".");
+    private void logEvent(Light light, String setLight) {
+        System.out.println("Light " + light.getId() + " was turned " + setLight + ".");
     }
 
     private boolean isLightEvent(SensorEvent event) {
