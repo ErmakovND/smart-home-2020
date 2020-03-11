@@ -9,10 +9,6 @@ public class Light {
         this.isOn = isOn;
     }
 
-    public boolean isOn() {
-        return isOn;
-    }
-
     public String getId() {
         return id;
     }
