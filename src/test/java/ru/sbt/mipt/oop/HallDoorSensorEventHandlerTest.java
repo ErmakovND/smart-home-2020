@@ -11,25 +11,26 @@ import static org.junit.Assert.*;
 
 public class HallDoorSensorEventHandlerTest {
     private SmartHome smartHome;
+    private CommandSender commandSender;
     private List<Light> lights;
 
     @Before
     public void setUp() {
         List<Light> hallLights = Arrays.asList(
-                new Light("0", false),
-                new Light("1", true)
+                new Light("hl0", false),
+                new Light("hl1", true)
         );
         List<Light> roomLights = Arrays.asList(
-                new Light("00", false),
-                new Light("01", true)
+                new Light("rl0", false),
+                new Light("rl1", true)
         );
         List<Door> hallDoors = Arrays.asList(
-                new Door(false, "0"),
-                new Door(true, "1")
+                new Door(false, "hd0"),
+                new Door(true, "hd1")
         );
         List<Door> roomDoors = Arrays.asList(
-                new Door(false, "00"),
-                new Door(true, "01")
+                new Door(false, "rd0"),
+                new Door(true, "rd1")
         );
         Room hall = new Room(
                 hallLights,
@@ -42,14 +43,15 @@ public class HallDoorSensorEventHandlerTest {
                 "room"
         );
         smartHome = new SmartHome(Arrays.asList(hall, room));
+        commandSender = new CommandSenderImpl();
         lights = new ArrayList<>(hallLights);
         lights.addAll(roomLights);
     }
 
     @Test
     public void closeHallDoorTurnOffLight() {
-        SensorEvent event = new SensorEvent(SensorEventType.DOOR_CLOSED, "1");
-        new HallDoorSensorEventHandler(smartHome).handle(event);
+        SensorEvent event = new SensorEvent(SensorEventType.DOOR_CLOSED, "hd1");
+        new HallDoorSensorEventHandler(smartHome, commandSender).handle(event);
         for (Light light : lights) {
             assertFalse(light.isOn());
         }
@@ -57,9 +59,9 @@ public class HallDoorSensorEventHandlerTest {
 
     @Test
     public void closeRoomDoorLeaveLight() {
-        SensorEvent event = new SensorEvent(SensorEventType.DOOR_CLOSED, "01");
+        SensorEvent event = new SensorEvent(SensorEventType.DOOR_CLOSED, "rd1");
         List<Light> oldLights = new ArrayList<>(lights);
-        new HallDoorSensorEventHandler(smartHome).handle(event);
+        new HallDoorSensorEventHandler(smartHome, commandSender).handle(event);
         for (int i = 0; i < lights.size(); ++i) {
             assertEquals(oldLights.get(i).isOn(), lights.get(i).isOn());
         }

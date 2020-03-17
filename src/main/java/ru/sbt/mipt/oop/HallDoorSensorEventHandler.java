@@ -1,10 +1,12 @@
 package ru.sbt.mipt.oop;
 
-public class HallDoorSensorEventHandler implements SensorEventHandler, CommandSender {
+public class HallDoorSensorEventHandler implements SensorEventHandler {
     private SmartHome smartHome;
+    private CommandSender commandSender;
 
-    public HallDoorSensorEventHandler(SmartHome smartHome) {
+    public HallDoorSensorEventHandler(SmartHome smartHome, CommandSender commandSender) {
         this.smartHome = smartHome;
+        this.commandSender = commandSender;
     }
 
     @Override
@@ -18,10 +20,10 @@ public class HallDoorSensorEventHandler implements SensorEventHandler, CommandSe
             if (!(room.getName().equals("hall"))) return;
 
             room.execute(obj -> {
-                if (!(obj instanceof Light)) return;
+                if (!(obj instanceof Door)) return;
 
-                Light light = (Light) obj;
-                if (!(light.getId().equals(event.getObjectId()))) return;
+                Door door = (Door) obj;
+                if (!(door.getId().equals(event.getObjectId()))) return;
 
                 turnOffAllLights();
             });
@@ -35,7 +37,7 @@ public class HallDoorSensorEventHandler implements SensorEventHandler, CommandSe
             Light light = (Light) o;
             light.setOn(false);
             SensorCommand command = new SensorCommand(CommandType.LIGHT_OFF, light.getId());
-            sendCommand(command);
+            commandSender.sendCommand(command);
         });
     }
 }

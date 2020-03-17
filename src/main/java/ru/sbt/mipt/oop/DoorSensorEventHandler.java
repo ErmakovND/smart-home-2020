@@ -1,5 +1,7 @@
 package ru.sbt.mipt.oop;
 
+import java.util.logging.Level;
+
 public class DoorSensorEventHandler implements SensorEventHandler {
     private final SmartHome smartHome;
 
@@ -12,19 +14,24 @@ public class DoorSensorEventHandler implements SensorEventHandler {
         if (!isDoorEvent(event)) return;
 
         smartHome.execute(o -> {
-            if (!(o instanceof Door)) return;
+            if (!(o instanceof Room)) return;
 
-            Door door = (Door) o;
-            if (!door.getId().equals(event.getObjectId())) return;
+            Room room = (Room) o;
+            room.execute(obj -> {
+                if (!(obj instanceof Door)) return;
 
-            boolean setDoorOpen = event.getType() == SensorEventType.DOOR_OPEN;
-            door.setOpen(setDoorOpen);
-            logEvent(door, setDoorOpen ? "opened" : "closed");
+                Door door = (Door) obj;
+                if (!door.getId().equals(event.getObjectId())) return;
+
+                boolean setDoorOpen = event.getType() == SensorEventType.DOOR_OPEN;
+                door.setOpen(setDoorOpen);
+                logEvent(door, setDoorOpen ? "opened" : "closed", room);
+            });
         });
     }
 
-    private void logEvent(Door door, String setDoor) {
-        System.out.println("Door " + door.getId() + " was " + setDoor + ".");
+    private void logEvent(Door door, String setDoor, Room room) {
+        System.out.println("Door " + door.getId() + " in room " + room.getName() + " was " + setDoor + ".");
     }
 
     private boolean isDoorEvent(SensorEvent event) {
