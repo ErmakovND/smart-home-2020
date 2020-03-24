@@ -1,13 +1,9 @@
 package ru.sbt.mipt.oop.smarthome.components.alarm;
 
-abstract class AlarmState {
-    Alarm alarm;
+interface AlarmState {
 
-    AlarmState(Alarm alarm) {
-        this.alarm = alarm;
-    }
+    void activate(String code);
+    void deactivate(String code);
+    void alert();
 
-    abstract void activate(String code);
-    abstract void deactivate(String code);
-    abstract void alert();
 }

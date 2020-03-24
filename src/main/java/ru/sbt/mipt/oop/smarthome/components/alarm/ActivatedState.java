@@ -1,25 +1,29 @@
 package ru.sbt.mipt.oop.smarthome.components.alarm;
 
-public class ActivatedState extends AlarmState {
-    public ActivatedState(Alarm alarm) {
-        super(alarm);
+public class ActivatedState implements AlarmState {
+    private Alarm alarm;
+    private String code;
+
+    public ActivatedState(Alarm alarm, String code) {
+        this.alarm = alarm;
+        this.code = code;
     }
 
     @Override
-    void activate(String code) {
+    public void activate(String code) {
     }
 
     @Override
-    void deactivate(String code) {
-        if (code.equals(alarm.getCode())) {
+    public void deactivate(String code) {
+        if (code.equals(this.code)) {
             alarm.setState(new DeactivatedState(alarm));
         } else {
-            alarm.setState(new AlertedState(alarm));
+            alarm.setState(new AlertedState(alarm, code));
         }
     }
 
     @Override
-    void alert() {
-        alarm.setState(new AlertedState(alarm));
+    public void alert() {
+        alarm.setState(new AlertedState(alarm, code));
     }
 }

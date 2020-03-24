@@ -5,7 +5,6 @@ import ru.sbt.mipt.oop.smarthome.Actionable;
 
 public class Alarm implements Actionable {
     private AlarmState state;
-    private String code;
 
     public Alarm() {
         this.state = new DeactivatedState(this);
@@ -25,14 +24,6 @@ public class Alarm implements Actionable {
 
     public void alert() {
         state.alert();
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public AlarmState getState() {

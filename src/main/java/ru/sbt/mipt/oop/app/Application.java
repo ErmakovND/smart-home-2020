@@ -17,9 +17,8 @@ import java.util.List;
 public class Application {
 
     public static void main(String... args) {
-        SmartHome smartHome = new JsonSmartHomeReader("smart-home-1.json").readSmartHome();
         Alarm alarm = new Alarm();
-        smartHome.setAlarm(alarm);
+        SmartHome smartHome = new SmartHome(alarm);
         CommandSender commandSender = new CommandSenderImpl();
         List<EventHandler> eventHandlers = Arrays.asList(
                 new IgnoringDecorator(new LightStateEventHandler(smartHome), alarm),

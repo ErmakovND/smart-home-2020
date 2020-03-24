@@ -8,11 +8,11 @@ import java.util.Collection;
 
 public class SmartHome implements Actionable {
     Collection<Room> rooms;
-    Alarm alarm;
+    private final Alarm alarm;
 
-    public SmartHome() {
+    public SmartHome(Alarm alarm) {
         rooms = new ArrayList<>();
-        alarm = new Alarm();
+        this.alarm = alarm;
     }
 
     public SmartHome(Collection<Room> rooms, Alarm alarm) {
@@ -22,10 +22,6 @@ public class SmartHome implements Actionable {
 
     public void addRoom(Room room) {
         rooms.add(room);
-    }
-
-    public void setAlarm(Alarm alarm) {
-        this.alarm = alarm;
     }
 
     @Override

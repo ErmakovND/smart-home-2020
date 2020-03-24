@@ -5,6 +5,7 @@ import org.junit.Test;
 import ru.sbt.mipt.oop.smarthome.components.Light;
 import ru.sbt.mipt.oop.smarthome.components.Room;
 import ru.sbt.mipt.oop.smarthome.SmartHome;
+import ru.sbt.mipt.oop.smarthome.components.alarm.Alarm;
 import ru.sbt.mipt.oop.smarthome.events.SensorEvent;
 import ru.sbt.mipt.oop.smarthome.events.EventType;
 import ru.sbt.mipt.oop.smarthome.events.handlers.LightStateEventHandler;
@@ -25,7 +26,7 @@ public class LightSensorEventHandlerTest {
                 new Light("0", false),
                 new Light("1", true)
         );
-        smartHome = new SmartHome();
+        smartHome = new SmartHome(new Alarm());
         smartHome.addRoom(new Room(lights, new ArrayList<>(), "room"));
     }
 

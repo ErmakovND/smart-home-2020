@@ -17,44 +17,39 @@ public class AlarmTest {
     public void activateWhenDeactivated() {
         alarm.activate("code");
         assertTrue(alarm.getState() instanceof ActivatedState);
-        assertEquals("code", alarm.getCode());
     }
 
     @Test
     public void deactivateWhenActivatedWithSuccess() {
-        alarm.setState(new ActivatedState(alarm));
-        alarm.setCode("code");
+        alarm.setState(new ActivatedState(alarm, "code"));
         alarm.deactivate("code");
         assertTrue(alarm.getState() instanceof DeactivatedState);
     }
 
     @Test
     public void deactivateWhenActivatedWithFail() {
-        alarm.setState(new ActivatedState(alarm));
-        alarm.setCode("code");
+        alarm.setState(new ActivatedState(alarm, "code"));
         alarm.deactivate("another code");
         assertTrue(alarm.getState() instanceof AlertedState);
     }
 
     @Test
     public void deactivateWhenAlertedWithSuccess() {
-        alarm.setState(new AlertedState(alarm));
-        alarm.setCode("code");
+        alarm.setState(new AlertedState(alarm, "code"));
         alarm.deactivate("code");
         assertTrue(alarm.getState() instanceof DeactivatedState);
     }
 
     @Test
     public void deactivateWhenAlertedWithFail() {
-        alarm.setState(new AlertedState(alarm));
-        alarm.setCode("code");
+        alarm.setState(new AlertedState(alarm, "code"));
         alarm.deactivate("another code");
         assertTrue(alarm.getState() instanceof AlertedState);
     }
 
     @Test
     public void alertWhenActivated() {
-        alarm.setState(new ActivatedState(alarm));
+        alarm.setState(new ActivatedState(alarm, "code"));
         alarm.alert();
         assertTrue(alarm.getState() instanceof AlertedState);
     }
@@ -63,6 +58,6 @@ public class AlarmTest {
     public void alertWhenDeactivated() {
         alarm.setState(new DeactivatedState(alarm));
         alarm.alert();
-        assertTrue(alarm.getState() instanceof AlertedState);
+        assertTrue(alarm.getState() instanceof DeactivatedState);
     }
 }

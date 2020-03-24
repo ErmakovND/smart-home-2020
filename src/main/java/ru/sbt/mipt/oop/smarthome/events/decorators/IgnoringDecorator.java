@@ -5,11 +5,12 @@ import ru.sbt.mipt.oop.smarthome.components.alarm.AlertedState;
 import ru.sbt.mipt.oop.smarthome.events.SensorEvent;
 import ru.sbt.mipt.oop.smarthome.events.handlers.EventHandler;
 
-public class IgnoringDecorator extends BaseHandlerDecorator {
+public class IgnoringDecorator implements EventHandler {
+    private final EventHandler assignee;
     private final Alarm alarm;
 
     public IgnoringDecorator(EventHandler assignee, Alarm alarm) {
-        super(assignee);
+        this.assignee = assignee;
         this.alarm = alarm;
     }
 
