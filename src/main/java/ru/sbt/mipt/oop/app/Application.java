@@ -1,5 +1,8 @@
 package ru.sbt.mipt.oop.app;
 
+import com.coolcompany.smarthome.events.SensorEventsManager;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
 import ru.sbt.mipt.oop.smarthome.components.alarm.Alarm;
 import ru.sbt.mipt.oop.smarthome.SmartHome;
 import ru.sbt.mipt.oop.smarthome.events.decorators.IgnoringDecorator;
@@ -14,18 +17,12 @@ import ru.sbt.mipt.oop.smarthome.services.SensorEventManager;
 import java.util.Arrays;
 import java.util.List;
 
-public class Application {
+import org.springframework.context.support.AbstractApplicationContext;
 
+public class Application {
     public static void main(String... args) {
-        Alarm alarm = new Alarm();
-        SmartHome smartHome = new SmartHome(alarm);
-        CommandSender commandSender = new CommandSenderImpl();
-        List<EventHandler> eventHandlers = Arrays.asList(
-                new IgnoringDecorator(new LightStateEventHandler(smartHome), alarm),
-                new IgnoringDecorator(new DoorStateEventHandler(smartHome), alarm),
-                new IgnoringDecorator(new HallDoorEventHandler(smartHome, commandSender), alarm),
-                new NotifyingDecorator(new AlarmStateEventHandler(smartHome), alarm));
-        SensorEventManager sensorEventManager = new SensorEventManager(new RandomSensorEventProvider(), eventHandlers);
-        sensorEventManager.startHandling();
+        AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfiguration.class);
+        SensorEventsManager sensorEventsManager = context.getBean(SensorEventsManager.class);
+        sensorEventsManager.start();
     }
 }
