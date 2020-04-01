@@ -2,19 +2,19 @@ package ru.sbt.mipt.oop.smarthome.events.handlers;
 
 import org.junit.Before;
 import org.junit.Test;
+import ru.sbt.mipt.oop.smarthome.SmartHome;
 import ru.sbt.mipt.oop.smarthome.components.Door;
 import ru.sbt.mipt.oop.smarthome.components.Room;
-import ru.sbt.mipt.oop.smarthome.SmartHome;
 import ru.sbt.mipt.oop.smarthome.components.alarm.Alarm;
-import ru.sbt.mipt.oop.smarthome.events.SensorEvent;
 import ru.sbt.mipt.oop.smarthome.events.EventType;
-import ru.sbt.mipt.oop.smarthome.events.handlers.DoorStateEventHandler;
+import ru.sbt.mipt.oop.smarthome.events.SensorEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class DoorSensorEventHandlerTest {
     private SmartHome smartHome;
