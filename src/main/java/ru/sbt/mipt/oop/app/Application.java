@@ -5,6 +5,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import ru.sbt.mipt.oop.smarthome.components.alarm.Alarm;
 import ru.sbt.mipt.oop.smarthome.SmartHome;
+import ru.sbt.mipt.oop.smarthome.events.EventType;
 import ru.sbt.mipt.oop.smarthome.events.decorators.IgnoringDecorator;
 import ru.sbt.mipt.oop.smarthome.events.decorators.NotifyingDecorator;
 import ru.sbt.mipt.oop.smarthome.events.handlers.*;
@@ -15,7 +16,9 @@ import ru.sbt.mipt.oop.smarthome.services.JsonSmartHomeReader;
 import ru.sbt.mipt.oop.smarthome.services.SensorEventManager;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.context.support.AbstractApplicationContext;
 

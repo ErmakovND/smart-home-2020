@@ -6,10 +6,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.sbt.mipt.oop.smarthome.SmartHome;
 import ru.sbt.mipt.oop.smarthome.components.alarm.Alarm;
+import ru.sbt.mipt.oop.smarthome.events.EventType;
 import ru.sbt.mipt.oop.smarthome.events.decorators.IgnoringDecorator;
 import ru.sbt.mipt.oop.smarthome.events.decorators.NotifyingDecorator;
 import ru.sbt.mipt.oop.smarthome.events.handlers.*;
 import ru.sbt.mipt.oop.smarthome.services.CommandSenderImpl;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 public class AppConfiguration {
@@ -24,32 +29,41 @@ public class AppConfiguration {
     }
 
     @Bean
+    Map<String, EventType> typeMap() {
+        Map<String, EventType> map = new HashMap<>();
+        map.put("LightIsOn", EventType.LIGHT_ON);
+        map.put("LightIsOff", EventType.LIGHT_OFF);
+        map.put("DoorIsOpen", EventType.DOOR_OPEN);
+        map.put("DoorIsClosed", EventType.DOOR_CLOSED);
+        return map;
+    }
+
+    @Bean
     EventHandler alarmStateEventHandler() {
-        return new EventHandlerAdapter(new NotifyingDecorator(new AlarmStateEventHandler(smartHome()), alarm()));
+        return new EventHandlerAdapter(new NotifyingDecorator(new AlarmStateEventHandler(smartHome()), alarm()), typeMap());
     }
 
     @Bean
     EventHandler doorStateEventHandler() {
-        return new EventHandlerAdapter(new IgnoringDecorator(new DoorStateEventHandler(smartHome()), alarm()));
+        return new EventHandlerAdapter(new IgnoringDecorator(new DoorStateEventHandler(smartHome()), alarm()), typeMap());
     }
 
     @Bean
     EventHandler lightStateEventHandler() {
-        return new EventHandlerAdapter(new IgnoringDecorator(new LightStateEventHandler(smartHome()), alarm()));
+        return new EventHandlerAdapter(new IgnoringDecorator(new LightStateEventHandler(smartHome()), alarm()), typeMap());
     }
 
     @Bean
     EventHandler hallDoorEventHandler() {
-        return new EventHandlerAdapter(new IgnoringDecorator(new HallDoorEventHandler(smartHome(), new CommandSenderImpl()), alarm()));
+        return new EventHandlerAdapter(new IgnoringDecorator(new HallDoorEventHandler(smartHome(), new CommandSenderImpl()), alarm()), typeMap());
     }
 
     @Bean
-    SensorEventsManager sensorEventsManager() {
+    SensorEventsManager sensorEventsManager(Collection<EventHandler> eventHandlers) {
         SensorEventsManager manager = new SensorEventsManager();
-        manager.registerEventHandler(hallDoorEventHandler());
-        manager.registerEventHandler(lightStateEventHandler());
-        manager.registerEventHandler(doorStateEventHandler());
-        manager.registerEventHandler(alarmStateEventHandler());
+        for (EventHandler eventHandler : eventHandlers) {
+            manager.registerEventHandler(eventHandler);
+        }
         return manager;
     }
 }
