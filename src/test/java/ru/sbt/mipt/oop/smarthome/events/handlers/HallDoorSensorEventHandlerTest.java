@@ -2,13 +2,14 @@ package ru.sbt.mipt.oop.smarthome.events.handlers;
 
 import org.junit.Before;
 import org.junit.Test;
-import ru.sbt.mipt.oop.smarthome.SmartHome;
+import ru.sbt.mipt.oop.smarthome.components.alarm.Alarm;
 import ru.sbt.mipt.oop.smarthome.components.Door;
 import ru.sbt.mipt.oop.smarthome.components.Light;
 import ru.sbt.mipt.oop.smarthome.components.Room;
-import ru.sbt.mipt.oop.smarthome.components.alarm.Alarm;
-import ru.sbt.mipt.oop.smarthome.events.EventType;
+import ru.sbt.mipt.oop.smarthome.SmartHome;
 import ru.sbt.mipt.oop.smarthome.events.SensorEvent;
+import ru.sbt.mipt.oop.smarthome.events.EventType;
+import ru.sbt.mipt.oop.smarthome.events.handlers.HallDoorEventHandler;
 import ru.sbt.mipt.oop.smarthome.services.CommandSender;
 import ru.sbt.mipt.oop.smarthome.services.CommandSenderImpl;
 
@@ -16,8 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 public class HallDoorSensorEventHandlerTest {
     private SmartHome smartHome;
