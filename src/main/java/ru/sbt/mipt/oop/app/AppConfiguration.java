@@ -4,12 +4,16 @@ import com.coolcompany.smarthome.events.EventHandler;
 import com.coolcompany.smarthome.events.SensorEventsManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import rc.RemoteControl;
+import rc.RemoteControlRegistry;
 import ru.sbt.mipt.oop.smarthome.SmartHome;
 import ru.sbt.mipt.oop.smarthome.components.alarm.Alarm;
 import ru.sbt.mipt.oop.smarthome.events.EventType;
 import ru.sbt.mipt.oop.smarthome.events.decorators.IgnoringDecorator;
 import ru.sbt.mipt.oop.smarthome.events.decorators.NotifyingDecorator;
 import ru.sbt.mipt.oop.smarthome.events.handlers.*;
+import ru.sbt.mipt.oop.smarthome.remotecontrol.RemoteControlImpl;
+import ru.sbt.mipt.oop.smarthome.remotecontrol.commands.*;
 import ru.sbt.mipt.oop.smarthome.services.CommandSenderImpl;
 
 import java.util.Collection;
@@ -56,6 +60,60 @@ public class AppConfiguration {
     @Bean
     EventHandler hallDoorEventHandler() {
         return new EventHandlerAdapter(new IgnoringDecorator(new HallDoorEventHandler(smartHome(), new CommandSenderImpl()), alarm()), typeMap());
+    }
+
+    @Bean
+    Command activateAlarmCommand() {
+        return new ActivateAlarmCommand(alarm(), "default code");
+    }
+
+    @Bean
+    Command alertAlarmCommand() {
+        return new AlertAlarmCommand(alarm());
+    }
+
+    @Bean
+    Command closeHallDoorCommand() {
+        return new CloseHallDoorCommand(smartHome());
+    }
+
+    @Bean
+    Command turnOffAllLightCommand() {
+        return new TurnOffAllLightCommand(smartHome());
+    }
+
+    @Bean
+    Command turnOnAllLightCommand() {
+        return new TurnOnAllLightCommand(smartHome());
+    }
+
+    @Bean
+    Command turnOnHallLightCommand() {
+        return new TurnOnHallLightCommand(smartHome());
+    }
+
+    @Bean
+    Map<String, Command> commandMap() {
+        Map<String, Command> map = new HashMap<>();
+        map.put("A", activateAlarmCommand());
+        map.put("B", alertAlarmCommand());
+        map.put("C", closeHallDoorCommand());
+        map.put("1", turnOnAllLightCommand());
+        map.put("2", turnOffAllLightCommand());
+        map.put("3", turnOnHallLightCommand());
+        return map;
+    }
+
+    @Bean
+    RemoteControl remoteControl() {
+        return new RemoteControlImpl(commandMap());
+    }
+
+    @Bean
+    RemoteControlRegistry remoteControlRegistry() {
+        RemoteControlRegistry remoteControlRegistry = new RemoteControlRegistry();
+        remoteControlRegistry.registerRemoteControl(remoteControl(), "1");
+        return remoteControlRegistry;
     }
 
     @Bean
